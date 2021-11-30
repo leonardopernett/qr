@@ -1,0 +1,13 @@
+El proyecto se debe de llamar qr
+crear el .env basandose del .env.example y apuntar a la BD y servidor SMTP correcta.
+Instalar dependencias con:
+composer install
+
+Actualizar librerias con:
+composer update
+
+-- Creamos la APP key para que se agregue en las variables de entorno de forma automatica
+php artisan key:generate
+
+podremos acceder al proyecto
+http://localhost/qr/public
