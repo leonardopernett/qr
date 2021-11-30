@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Mail;
 class PeticionController extends Controller
 {
      public function create(){
-         $solicitud = DB::connection('mysql')->select('select * from qr_tipos_de_solicitud');
-         $areas = DB::connection('mysql')->select('select * from qr_areas');
-         $clientes  = DB::connection('mysql')->select('select * from qr_clientes');
-         $casos = DB::connection('mysql')->select('select * from qr_clientes where id=?',[4]);
+         $solicitud = DB::connection('mysql')->select('select * from tbl_qr_tipos_de_solicitud');
+         $areas = DB::connection('mysql')->select('select * from tbl_qr_areas');
+         $clientes  = DB::connection('mysql')->select('select * from tbl_qr_clientes');
+         $casos = DB::connection('mysql')->select('select * from tbl_qr_clientes where id=?',[4]);
           return view('web.peticion',[ 
             'solicitud' => $solicitud ,
             'clientes'  => $clientes,
@@ -38,7 +38,7 @@ class PeticionController extends Controller
          $recaptch = $request->input('g-recaptcha-response');
          if($recaptch){ 
 
-          $res = DB::connection('mysql')->select('SELECT COUNT(*) as total FROM qr_casos');
+          $res = DB::connection('mysql')->select('SELECT COUNT(*) as total FROM tbl_qr_casos');
 
           $id_solicitud  =  $request->tipo;
           $id_tipologia  =  $request->tipologia;
@@ -50,7 +50,7 @@ class PeticionController extends Controller
           $numero_caso   =  'C-' .( $res[0]->total + 1);
           $id_estado_caso     =  1;
           
-           DB::connection('mysql')->insert('insert into qr_casos (id_solicitud, id_tipologia, comentario, documento, nombre, correo, id_cliente, numero_caso, id_estado_caso) values (?,?,?,?,?,?,?,?,?)',[
+           DB::connection('mysql')->insert('insert into tbl_qr_casos (id_solicitud, id_tipologia, comentario, documento, nombre, correo, id_cliente, numero_caso, id_estado_caso) values (?,?,?,?,?,?,?,?,?)',[
              $id_solicitud,$id_tipologia, $comentario, $documento, $nombre, $correo, $id_cliente , $numero_caso,  $id_estado_caso  
            ]);
 
@@ -58,15 +58,15 @@ class PeticionController extends Controller
             
             if($request->file('file')){
                 $file = $request->file('file')->store('public');
-                DB::update('UPDATE qr_casos SET archivo=? where id=? ',[$file,$object[0]->id]);
+                DB::update('UPDATE tbl_qr_casos SET archivo=? where id=? ',[$file,$object[0]->id]);
             }
 
             if($request->file('file2')){
                 $file2 = $request->file('file2')->store('public');
-                DB::connection('mysql')->update( 'UPDATE qr_casos SET archivo2=? where id=?',[ $file2, $object[0]->id ] );
+                DB::connection('mysql')->update( 'UPDATE tbl_qr_casos SET archivo2=? where id=?',[ $file2, $object[0]->id ] );
             }
 
-            $data = DB::connection('mysql')->select('SELECT tipo_de_dato AS tipo, a.nombre AS area, tipologia, c.nombre AS nombre, documento, correo, clientes,numero_caso
+            $data = DB::connection('mysql')->select('SELECT tbl_tipo_de_dato AS tipo, a.nombre AS area, tipologia, c.nombre AS nombre, documento, correo, clientes,numero_caso
             FROM qr_casos c
             INNER JOIN qr_tipos_de_solicitud s
             ON c.id_solicitud = s.id
@@ -97,6 +97,6 @@ class PeticionController extends Controller
         }
      }
      public function tipologia(Request $request){
-       return DB::connection('mysql')->select('SELECT * FROM qr_tipologias WHERE id_areas =?',[$request->input('areas')]);
+       return DB::connection('mysql')->select('SELECT * FROM tbl_qr_tipologias WHERE id_areas =?',[$request->input('areas')]);
      }
 }
