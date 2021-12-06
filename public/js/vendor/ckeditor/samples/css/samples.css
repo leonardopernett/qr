@@ -594,7 +594,7 @@ body input.button-a {
   border: 0;
   vertical-align: middle;
   margin: 1px 0;
-  background: transparent;
+  background-color: transparent;
 }
 body a.button-a.icon-pos-left,
 body button.button-a.icon-pos-left,
