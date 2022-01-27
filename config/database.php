@@ -66,11 +66,11 @@ return [
         'jarvis'=>[
             'driver' => 'mysql',
             'url' => env('DATABASE_URL_JARVIS'),
-            'host' => env('DB_HOST_JARVIS', '127.0.0.1'),
+            'host' => env('DB_HOST_JARVIS', '172.102.180.194'),
             'port' => env('DB_PORT_JARVIS', '3306'),
-            'database' => env('DB_DATABASE_JARVIS', 'forge'),
-            'username' => env('DB_USERNAME_JARVIS', 'forge'),
-            'password' => env('DB_PASSWORD_JARVIS', ''),
+            'database' => env('DB_DATABASE_JARVIS', 'jarvis'),
+            'username' => env('DB_USERNAME_JARVIS', 'consulta_jarvis'),
+            'password' => env('DB_PASSWORD_JARVIS', 'C1nc53nt0'),
         ],
 
         'pgsql' => [

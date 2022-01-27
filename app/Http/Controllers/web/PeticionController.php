@@ -15,12 +15,16 @@ class PeticionController extends Controller
          $solicitud = DB::connection('mysql')->select('select * from tbl_qr_tipos_de_solicitud');
          $areas = DB::connection('mysql')->select('select * from tbl_qr_areas');
          $clientes  = DB::connection('mysql')->select('select * from tbl_qr_clientes');
+         $jarvis = DB::connection('jarvis')->select("select * from dp_clientes");
+         
+      
          $casos = DB::connection('mysql')->select('select * from tbl_qr_clientes where id=?',[4]);
           return view('web.peticion',[ 
             'solicitud' => $solicitud ,
             'clientes'  => $clientes,
             'areas'     => $areas,
-            'casos'     => $casos
+            'casos'     => $casos,
+            'jarvis'    => $jarvis
             ]);
      }
      public function store(Request $request){
@@ -66,18 +70,24 @@ class PeticionController extends Controller
                 DB::connection('mysql')->update( 'UPDATE tbl_qr_casos SET archivo2=? where id=?',[ $file2, $object[0]->id ] );
             }
 
-            $data = DB::connection('mysql')->select('SELECT tbl_tipo_de_dato AS tipo, a.nombre AS area, tipologia, c.nombre AS nombre, documento, correo, clientes,numero_caso
-            FROM qr_casos c
-            INNER JOIN qr_tipos_de_solicitud s
+            $data = DB::connection('mysql')->select('SELECT s.tipo_de_dato AS tipo, t.tipologia, a.nombre AS areas, c.nombre, documento, correo,numero_caso 
+            FROM tbl_qr_casos c
+            INNER JOIN tbl_qr_tipos_de_solicitud s
             ON c.id_solicitud = s.id
-            INNER JOIN qr_tipologias t 
+            INNER JOIN tbl_qr_tipologias t 
             ON t.id = c.id_tipologia
-            INNER JOIN qr_areas a
-            ON a.id= t.id_areas 
-            INNER JOIN qr_clientes q
-            ON q.id = c.id_cliente where c.id=?',[$object[0]->id]);
+            INNER JOIN tbl_qr_areas a
+            ON a.id= t.id_areas where c.id=?',[$object[0]->id]);
 
-             Mail::to('engie.guerrero@grupokonecta.com')->send(new PeticionMailer($data[0]) );
+            
+            $correos = Db::connection('mysql')->select('SELECT * FROM tbl_qr_correos');
+            $valor = [];
+            foreach ($correos as $correo ) {
+                array_push($valor, $correo->email) ;
+            }
+          
+             Mail::to($valor)->send(new PeticionMailer($data[0]) );
+             
              Mail::to($request->email)->send(new ClienteMailer($data[0]) );
         
              
@@ -99,4 +109,35 @@ class PeticionController extends Controller
      public function tipologia(Request $request){
        return DB::connection('mysql')->select('SELECT * FROM tbl_qr_tipologias WHERE id_areas =?',[$request->input('areas')]);
      }
+
+     public function insertjarvis(Request $request){
+        
+      if ($request->hasHeader('Authorization')) {
+          $token = $request->bearerToken();
+          if($token == 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'){
+           
+            DB::connection('mysql')->delete('delete from tbl_qr_clientes');
+            $jarvis = DB::connection('jarvis')->select("SELECT * FROM dp_clientes");
+            $data = count($jarvis);
+             
+            foreach ($jarvis as $key ) {
+            
+              DB::connection('mysql')->insert(' INSERT INTO tbl_qr_clientes (`clientes`) VALUES (?)',[$key->cliente]);
+            }
+
+            return "updated table";
+          }else{
+            return "token failed";
+          }
+       }else{
+          return "Error authentication";
+       }
+
+     
+        
+        
+     }
+
+
+
 }

@@ -24,7 +24,7 @@
             <p><strong>Se creo una nueva solicitud de quejas y reclamos</strong></p>
             <p><strong>Numero de caso:</strong> {{ $sms->numero_caso }}</p>
             <p><strong>Tipo:</strong> {{ $sms->tipo }}</p>
-            <p><strong>Area:</strong> {{ $sms->area }}</p>
+            <p><strong>Area:</strong> {{ $sms->areas }}</p>
             <small>Por favor, NO responda a este mensaje, es un envío automático.</small>
         </div>
     </div>

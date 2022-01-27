@@ -116,8 +116,10 @@
                             <label for=""> <small class="asterisco">*</small> Cliente:</label><br>
                             <select name="client" class="js-example-basic-single form-control" value="{{ old('client') }}" >
                                 <option value="">Seleccione</option>
-                                @foreach ($clientes as $item)
-                                  <option value="{{ $item->id }}" {{old('client') ==  $item->id ? 'selected':''}} >{{ $item->clientes }}</option> 
+
+                                @foreach ($jarvis as $item)
+            
+                                  <option value="{{ $item->id_dp_clientes }}" {{old('client') ==  $item->id_dp_clientes ? 'selected':''}} >{{ $item->cliente }}</option> 
                                 @endforeach
                             </select>
                             @error('client')
@@ -192,8 +194,7 @@
       CKEDITOR.replace( 'message',{editorplaceholder: 'Start typing here...', });
  
     $(function(){
-        $('.js-example-basic-single').select2()
-
+      
         let contenido = document.getElementById('contenido')
         $('#area').change(function(){
             document.getElementById('select').classList.remove('hide')
@@ -208,8 +209,6 @@
         });
     })
 
-
- 
    </script>   
  
 @endsection

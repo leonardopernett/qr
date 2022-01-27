@@ -16,3 +16,4 @@ Route::post('tipologia/all', [ PeticionController::class, 'tipologia'])
       ->name('tipologia');
 
 Route::view('mail','web.mail.message');
+
