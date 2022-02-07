@@ -55,25 +55,28 @@
                          @csrf
                            <div class="mb-2">
                                <label for=""> <small class="asterisco">*</small> Tipo de petición: </label>
-                               <select name="tipo" class="form-control" value="{{ old('tipo')  }}" required>
+                               <select name="tipo" class="form-control" value="{{ old('tipo')  }}">
                                    <option value="">Seleccione</option>
                                    @foreach ($solicitud as $item)
                                      <option value="{{ $item->id }}" {{old('tipo') ==  $item->id ? 'selected':''}} >{{ $item->tipo_de_dato }}</option> 
                                    @endforeach
                                </select>
                                @error('tipo')
-                                 <small class="text-danger">El tipo es requerido</small>  
+                                 <small class="text-danger">{{$message}}</small>  
                                @enderror
                            </div>
 
                            <div class="mb-2">
                             <label for=""> <small class="asterisco">*</small> Área: </label>
-                              <select name="areas" id="area" class="form-control" required>
+                              <select name="areas" id="area" class="form-control">
                                <option value="">Seleccionar</option>
                                @foreach ($areas as $area)
                                  <option value="{{ $area->id }}" {{old('areas') ==  $item->id ? 'selected':''}}>{{$area->nombre}}</option>
                                @endforeach
                              </select>
+                             @error('areas')
+                               <small class="text-danger">{{$message}}</small>  
+                             @enderror
                             
                            </div>
                           
@@ -84,22 +87,25 @@
                                <option value="">Seleccione</option>
                                
                             </select>
+                            @error('tipologia')
+                              <small class="text-danger">{{$message}}</small>  
+                            @enderror
                            </div>
                            
                            <div class="mb-2">
                               <label for=""> <small class="asterisco">*</small> Nombre Completo:</label>
-                              <input type="text" name="name" class="form-control  @error('name') ? 'is-invalid' : 'is-valid' @enderror }}" placeholder="Nombre" value="{{ old('name') }}">
-                                @error('name')
-                                   <small class="text-danger">El nombre es requerido</small>  
+                              <input type="text" name="nombre" class="form-control  @error('nombre') ? 'is-invalid' : 'is-valid' @enderror }}" placeholder="Nombre" value="{{ old('name') }}">
+                                @error('nombre')
+                                   <small class="text-danger">{{ $message}}</small>  
                                 @enderror
                               
                            </div>
 
                            <div class="mb-2">
                             <label for=""> <small class="asterisco">*</small> Identificación:</label>
-                            <input type="number" name="identification" class="form-control" placeholder="Identificación" value="{{ old('identification') }}">
-                                @error('identification')
-                                   <small class="text-danger">El documento es requerido</small>  
+                            <input type="text" name="identificacion" class="form-control" placeholder="Identificación" value="{{ old('identificacion') }}">
+                                @error('identificacion')
+                                   <small class="text-danger">{{ $message}}</small>  
                                 @enderror
                          </div>
 
@@ -108,38 +114,40 @@
                             <label for=""> <small class="asterisco">*</small> Correo:</label>
                             <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
                             @error('email')
-                              <small class="text-danger">El correo es requerido</small>  
+                              <small class="text-danger">{{$message}}</small>  
                             @enderror
                          </div>
 
                          <div class="mb-2">
                             <label for=""> <small class="asterisco">*</small> Cliente:</label><br>
-                            <select name="client" class="js-example-basic-single form-control" value="{{ old('client') }}" >
+                            <select name="cliente" class="js-example-basic-single form-control" value="{{ old('cliente') }}" >
                                 <option value="">Seleccione</option>
 
                                 @foreach ($jarvis as $item)
             
-                                  <option value="{{ $item->id_dp_clientes }}" {{old('client') ==  $item->id_dp_clientes ? 'selected':''}} >{{ $item->cliente }}</option> 
+                                  <option value="{{ $item->id_dp_clientes }}" {{old('cliente') ==  $item->id_dp_clientes ? 'selected':''}} >{{ $item->cliente }}</option> 
                                 @endforeach
                             </select>
-                            @error('client')
-                              <small class="text-danger">El cliente es requerido</small>  
+                            @error('cliente')
+                              <small class="text-danger">{{$message}}</small>  
                             @enderror
                         </div>
 
                         <div class="mb-2">
                             <label for=""> <small class="asterisco">*</small> Mensaje:</label>
-                            <textarea name="message" id="" cols="30" rows="10"></textarea>
-                            @error('message')
-                              <small class="text-danger">El mensaje es requerido</small>  
+                            <textarea name="mensaje" id="" cols="30" rows="10" value={{old('mensaje')}}></textarea>
+                            @error('mensaje')
+                              <small class="text-danger">{{$message}}</small>  
                             @enderror
                          </div>
 
                          <div class="mb-2 d-flex justify-content-between" style="gap:5px" >
-                           <input type="checkbox" class="form-ckeck-input mr-2" required>
-                           <p class="authorizacion">Autorizo a Konecta (Multienlace S.A.S) para el almacenamiento y gestión de mis datos personales en los términos de la ley 1581 de 2012 para efectos del envío de encuestas, respuesta de solicitudes, invitaciones a eventos corporativos, noticias, felicitaciones y cualquier otro concepto que pueda mejorar el servicio prestado por Konecta y la relación con la compañía. Konecta podrá contactarme a través de correo electrónico, mensaje de texto, WhatsApp, teléfono o mensajería física. Como titular puedo ejercer derechos para conocer, actualizar, rectificar, suprimir y/o revocar el uso de mis datos personales a través del correo electrónico proteccióndedatos@grupokonecta.co o a la dirección de correspondencia Cra 37A No. 8-43 Medellín, Colombia o a los teléfonos (4) 510 57 00 ó (1) 3431920 ​y conocer la política de tratamiento de mis datos en www.grupokonecta.com.co</p>
-                           
+                           <input type="checkbox" name="autorizacion" class="form-ckeck-input mr-2" @if(old('autorizacion')) checked @endif>
+                           <p class="autorizacion" style="text-align: justify; font-size:12px" >Autorizo a Konecta (Multienlace S.A.S) para el almacenamiento y gestión de mis datos personales en los términos de la ley 1581 de 2012 para efectos del envío de encuestas, respuesta de solicitudes, invitaciones a eventos corporativos, noticias, felicitaciones y cualquier otro concepto que pueda mejorar el servicio prestado por Konecta y la relación con la compañía. Konecta podrá contactarme a través de correo electrónico, mensaje de texto, WhatsApp, teléfono o mensajería física. Como titular puedo ejercer derechos para conocer, actualizar, rectificar, suprimir y/o revocar el uso de mis datos personales a través del correo electrónico proteccióndedatos@grupokonecta.co o a la dirección de correspondencia Cra 37A No. 8-43 Medellín, Colombia o a los teléfonos (4) 510 57 00 ó (1) 3431920 ​y conocer la política de tratamiento de mis datos en www.grupokonecta.com.co</p>
                           </div>
+                           @error('autorizacion')
+                              <small class="text-danger" style="">{{$message}}</small>  
+                           @enderror
 
                          <div class="mb-2">
                             <label for="">Cargar Archivo 1:</label>
@@ -156,7 +164,7 @@
                                 {{ Session::get('flash') }}                  
                             @endif
                        </small>
-                         <div class="g-recaptcha ml-3 mb-3" data-theme="light" data-sitekey="6LegZbIcAAAAAKBdSmx7yQU0FLRKFSEMAS-ZBdpS" required></div>
+                         <div class="g-recaptcha ml-3 mb-3" data-theme="light" data-sitekey="6LegZbIcAAAAAKBdSmx7yQU0FLRKFSEMAS-ZBdpS"></div>
                          
     
                          <small class="campos">los campos <span class="text-danger">( * )</span> son requeridos</small>
@@ -191,7 +199,7 @@
 
 <script>
 
-      CKEDITOR.replace( 'message',{editorplaceholder: 'Start typing here...', });
+      CKEDITOR.replace( 'mensaje',{editorplaceholder: 'Start typing here...', });
  
     $(function(){
       

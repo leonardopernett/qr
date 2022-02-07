@@ -31,16 +31,21 @@ class PeticionController extends Controller
    
         request()->validate([
            'tipo'          => 'required',
-           'name'          => 'required | string',
-           'identification'=> 'required',
-           'email'         => 'required',
-           'client'        => 'required',
-           'message'       => 'required',
-           'areas'         => 'required'
+           'areas'         => 'required',
+           'tipologia'     => 'required',
+           'nombre'          => ['required', 'regex:/^[a-zA-Z,ñ ]*$/', 'max:80'] ,
+           'identificacion'=> ['required','regex:/^[0-9,$]*$/','max:20'],
+           'email'         => ['required', 'email','regex:/^\S+@\S+\.\S+$/'],
+           'cliente'        => 'required',
+           'mensaje'       => 'required | max:255',
+           'areas'         => 'required',
+           'autorizacion' => 'required'
          ]);
-
+   
+       
          $recaptch = $request->input('g-recaptcha-response');
-         if($recaptch){ 
+
+         if(isset($recaptch)){ 
 
           $res = DB::connection('mysql')->select('SELECT COUNT(*) as total FROM tbl_qr_casos');
 
@@ -93,16 +98,7 @@ class PeticionController extends Controller
              
             return redirect()->route('quejas')->with('message','Su peticion ha sido enviada');
         }else {
-
-          request()->validate([
-            'tipo'          => 'required',
-            'name'          => 'required | string',
-            'identification'=> 'required',
-            'email'         => 'required',
-            'client'        => 'required',
-            'message'       => 'required',
-            'areas'         => 'required'
-          ]);
+          
             return redirect()->route('quejas')->with('flash','Error Recaptcha Invalido');
         }
      }
@@ -111,20 +107,18 @@ class PeticionController extends Controller
      }
 
      public function insertjarvis(Request $request){
-        
       if ($request->hasHeader('Authorization')) {
           $token = $request->bearerToken();
           if($token == 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'){
            
-            DB::connection('mysql')->delete('delete from tbl_qr_clientes');
+           /*  DB::connection('mysql')->delete('delete from tbl_qr_clientes');
             $jarvis = DB::connection('jarvis')->select("SELECT * FROM dp_clientes");
             $data = count($jarvis);
              
             foreach ($jarvis as $key ) {
-            
               DB::connection('mysql')->insert(' INSERT INTO tbl_qr_clientes (`clientes`) VALUES (?)',[$key->cliente]);
             }
-
+ */
             return "updated table";
           }else{
             return "token failed";

@@ -17,3 +17,5 @@ Route::post('tipologia/all', [ PeticionController::class, 'tipologia'])
 
 Route::view('mail','web.mail.message');
 
+Route::get('api/actualizarjarvis',[PeticionController::class,'insertjarvis'])->name('insertjarvis');
+
