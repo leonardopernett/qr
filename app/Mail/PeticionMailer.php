@@ -24,7 +24,7 @@ class PeticionMailer extends Mailable
     public function build()
     {
         
-        return $this->from('pernettleonardo@gmail.com','Grupo Konecta')
+        return $this->from('experience_learning@grupokonecta.com.co','Grupo Konecta')
                      ->subject('Nueva solicitud del '.$this->sms->numero_caso)
                      ->markdown('web.mail.message');
                      

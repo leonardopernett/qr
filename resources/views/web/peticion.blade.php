@@ -50,8 +50,8 @@
              <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                       <!-- <form action="{{ route('contact') }}" method="POST" enctype="multipart/form-data" id="form"> -->
-                       <form action="../public/contact" method="POST" enctype="multipart/form-data" id="form">
+            
+                       <form action="{{route('contact')}}" method="POST" enctype="multipart/form-data" id="form">
                          @csrf
                            <div class="mb-2">
                                <label for=""> <small class="asterisco">*</small> Tipo de petición: </label>
@@ -94,7 +94,7 @@
                            
                            <div class="mb-2">
                               <label for=""> <small class="asterisco">*</small> Nombre Completo:</label>
-                              <input type="text" name="nombre" class="form-control  @error('nombre') ? 'is-invalid' : 'is-valid' @enderror }}" placeholder="Nombre" value="{{ old('name') }}">
+                              <input type="text" name="nombre" class="form-control  @error('nombre') ? 'is-invalid' : 'is-valid' @enderror }}" placeholder="Nombre" value="{{ old('nombre') }}">
                                 @error('nombre')
                                    <small class="text-danger">{{ $message}}</small>  
                                 @enderror
@@ -122,9 +122,7 @@
                             <label for=""> <small class="asterisco">*</small> Cliente:</label><br>
                             <select name="cliente" class="js-example-basic-single form-control" value="{{ old('cliente') }}" >
                                 <option value="">Seleccione</option>
-
                                 @foreach ($jarvis as $item)
-            
                                   <option value="{{ $item->id_dp_clientes }}" {{old('cliente') ==  $item->id_dp_clientes ? 'selected':''}} >{{ $item->cliente }}</option> 
                                 @endforeach
                             </select>
@@ -135,7 +133,8 @@
 
                         <div class="mb-2">
                             <label for=""> <small class="asterisco">*</small> Mensaje:</label>
-                            <textarea name="mensaje" id="" cols="30" rows="10" value={{old('mensaje')}}></textarea>
+                            <textarea name="mensaje" maxlength="255" id="mensaje" class="form-control" style="height: 120px" cols="20" placeholder="Mensaje">{{old('mensaje')}}</textarea>
+                            <small class="contador"><span id="contador">0</span> <span>/255</span></small>
                             @error('mensaje')
                               <small class="text-danger">{{$message}}</small>  
                             @enderror
@@ -151,12 +150,18 @@
 
                          <div class="mb-2">
                             <label for="">Cargar Archivo 1:</label>
-                            <input type="file" class="form-control" name="file"></textarea>
+                            <input type="file" class="form-control" accept=".pdf, .xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg, .ppt,.rar,.zip" name="file"></textarea>
+                            @error('file')
+                               <small class="text-danger" style="">{{$message}}</small>  
+                            @enderror
                          </div>
 
                          <div class="mb-2">
                           <label for="">Cargar Archivo 2:</label>
-                          <input type="file" class="form-control" name="file2"></textarea>
+                          <input type="file" class="form-control" accept=".pdf, .xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg, .ppt,.rar,.zip" name="file2"></textarea>
+                          @error('file2')
+                          <small class="text-danger" style="">{{$message}}</small>  
+                       @enderror
                        </div>
 
                          <small class="text-danger">
@@ -175,8 +180,8 @@
                        </form>
                     </div>
                     <div class="col-md-6 d-flex align-items-center justify-content-center mt-3 hidden">
-                       <!-- <img src="{{asset('images/send.png')}}" alt="" width="500" class="img-fluid "> -->
-                       <img src="../public/images/send.png" alt="" width="500" class="img-fluid ">
+                        <img src="{{asset('images/send.png')}}" alt="" width="500" class="img-fluid "> 
+                     
                     </div>
                 </div>
              </div>
@@ -199,8 +204,13 @@
 
 <script>
 
-      CKEDITOR.replace( 'mensaje',{editorplaceholder: 'Start typing here...', });
+    /*   CKEDITOR.replace( 'mensaje',{editorplaceholder: 'Start typing here...', }); */
  
+    let contador = document.getElementById('contador')
+    document.getElementById('mensaje').addEventListener('keyup',(e)=>{
+      contador.innerText=e.target.value.length
+    })
+
     $(function(){
       
         let contenido = document.getElementById('contenido')

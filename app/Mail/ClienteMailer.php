@@ -28,7 +28,7 @@ class ClienteMailer extends Mailable
      */
     public function build()
     {
-        return $this->from('contacts@grupokonecta.com','Grupo Konecta')
+        return $this->from('experience_learning@grupokonecta.com.co','Grupo Konecta')
                     ->subject('Nueva solicitud del'.$this->sms->numero_caso)
                     ->markdown('web.mail.message2');
     }

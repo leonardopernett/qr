@@ -19,3 +19,8 @@ Route::view('mail','web.mail.message');
 
 Route::get('api/actualizarjarvis',[PeticionController::class,'insertjarvis'])->name('insertjarvis');
 
+
+
+Route::get('token', function(){
+    return ["name"=>"leonardo"];
+});

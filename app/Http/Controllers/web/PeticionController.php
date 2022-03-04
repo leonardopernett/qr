@@ -8,15 +8,20 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\PeticionMailer;
 use App\Mail\ClienteMailer;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Str;
 class PeticionController extends Controller
 {
      public function create(){
+        header("X-Powered-By:");
+        header("Cache-Control: no-cache,no-store, must-revalidate"); //HTTP 1.1
+        header("Pragma: no-cache"); //HTTP 1.0
+        header("X-Content-Type-Options:nosniff");
+
          $solicitud = DB::connection('mysql')->select('select * from tbl_qr_tipos_de_solicitud');
          $areas = DB::connection('mysql')->select('select * from tbl_qr_areas');
          $clientes  = DB::connection('mysql')->select('select * from tbl_qr_clientes');
          $jarvis = DB::connection('jarvis')->select("select * from dp_clientes");
-         
+        
       
          $casos = DB::connection('mysql')->select('select * from tbl_qr_clientes where id=?',[4]);
           return view('web.peticion',[ 
@@ -28,21 +33,25 @@ class PeticionController extends Controller
             ]);
      }
      public function store(Request $request){
-   
+       $data = str_replace("<script>",'',$request->input('mensaje')); 
+       $resp = str_replace("</script>",'',$data); 
+    
         request()->validate([
            'tipo'          => 'required',
            'areas'         => 'required',
            'tipologia'     => 'required',
-           'nombre'          => ['required', 'regex:/^[a-zA-Z,ñ ]*$/', 'max:80'] ,
-           'identificacion'=> ['required','regex:/^[0-9,$]*$/','max:20'],
+           'nombre'          => ['required', 'max:80', 'regex:/^[a-zA-Z,ñ ]*$/',] ,
+           'identificacion'=> ['required','max:20','regex:/^[0-9,$]*$/',],
            'email'         => ['required', 'email','regex:/^\S+@\S+\.\S+$/'],
            'cliente'        => 'required',
-           'mensaje'       => 'required | max:255',
+           'mensaje'       => 'required | max:150',
            'areas'         => 'required',
-           'autorizacion' => 'required'
+           'autorizacion' => 'required',
+           'file'  =>    'mimes:pdf, xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000',
+           'file2' =>    'mimes:pdf,xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000'
          ]);
    
-       
+         dd($resp);
          $recaptch = $request->input('g-recaptcha-response');
 
          if(isset($recaptch)){ 
@@ -103,33 +112,24 @@ class PeticionController extends Controller
         }
      }
      public function tipologia(Request $request){
+      
        return DB::connection('mysql')->select('SELECT * FROM tbl_qr_tipologias WHERE id_areas =?',[$request->input('areas')]);
      }
 
      public function insertjarvis(Request $request){
-      if ($request->hasHeader('Authorization')) {
-          $token = $request->bearerToken();
-          if($token == 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'){
-           
-           /*  DB::connection('mysql')->delete('delete from tbl_qr_clientes');
-            $jarvis = DB::connection('jarvis')->select("SELECT * FROM dp_clientes");
-            $data = count($jarvis);
-             
-            foreach ($jarvis as $key ) {
-              DB::connection('mysql')->insert(' INSERT INTO tbl_qr_clientes (`clientes`) VALUES (?)',[$key->cliente]);
-            }
- */
-            return "updated table";
-          }else{
-            return "token failed";
-          }
-       }else{
-          return "Error authentication";
-       }
+   
+      $response = explode(' ', $request->header('Authorization'));
 
+      if(Str::startsWith('basic ', $response)){
+         if($response[1]=='amVua2lzOkNvbG9tYmlhMzIq'){
+           return response()->json([" success" => "updated table" ],200);
+         }else{
+            return response()->json(["error"=>"Unauthorized"],401);
+         }
+      }else{
+        return response()->json(["error"=>"Unauthorized"],401);
+      }
      
-        
-        
      }
 
 

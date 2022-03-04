@@ -15,7 +15,7 @@
         <div class="col-md-8 mx-auto">
            <div class="d-bock text-center">
                <!-- <img src="{{asset('images/logo.png')}}" alt="" width="300" class="img-fluid my-3"> -->
-               <img src="../public/images/logo.png" alt="" width="300" class="img-fluid my-3">
+               <img src="{{asset('images/logo.png')}}" alt="" width="300" class="img-fluid my-3">
            </div>
         </div>
     </div>
