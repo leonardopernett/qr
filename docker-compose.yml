@@ -14,12 +14,15 @@ services:
         max-file: "3"
     volumes:
       - $PWD/:/var/www/html/qr/
+      - $PWD/docker-volume/apache/security.conf:/etc/apache2/conf-enabled/security.conf
     command: bash -c "
       cd qr &&
       echo 'Compose Install' &&
       composer install &&
       echo 'Compose Update' &&
       composer update &&
+      a2enmod headers &&
+      a2enmod http2 &&
       apache2-foreground"
   
 
