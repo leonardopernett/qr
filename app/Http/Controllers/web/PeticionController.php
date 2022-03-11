@@ -44,14 +44,14 @@ class PeticionController extends Controller
            'identificacion'=> ['required','max:20','regex:/^[0-9,$]*$/',],
            'email'         => ['required', 'email','regex:/^\S+@\S+\.\S+$/'],
            'cliente'        => 'required',
-           'mensaje'       => 'required | max:150',
+           'message'       => 'required | max:150',
            'areas'         => 'required',
            'autorizacion' => 'required',
            'file'  =>    'mimes:pdf, xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000',
            'file2' =>    'mimes:pdf,xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000'
          ]);
    
-         dd($resp);
+     
          $recaptch = $request->input('g-recaptcha-response');
 
          if(isset($recaptch)){ 
@@ -67,7 +67,7 @@ class PeticionController extends Controller
           $id_cliente    =  $request->client;
           $numero_caso   =  'C-' .( $res[0]->total + 1);
           $id_estado_caso     =  1;
-          
+           dd($request->message);
            DB::connection('mysql')->insert('insert into tbl_qr_casos (id_solicitud, id_tipologia, comentario, documento, nombre, correo, id_cliente, numero_caso, id_estado_caso) values (?,?,?,?,?,?,?,?,?)',[
              $id_solicitud,$id_tipologia, $comentario, $documento, $nombre, $correo, $id_cliente , $numero_caso,  $id_estado_caso  
            ]);

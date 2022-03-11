@@ -133,9 +133,9 @@
 
                         <div class="mb-2">
                             <label for=""> <small class="asterisco">*</small> Mensaje:</label>
-                            <textarea name="mensaje" maxlength="255" id="mensaje" class="form-control" style="height: 120px" cols="20" placeholder="Mensaje">{{old('mensaje')}}</textarea>
+                            <textarea name="message" maxlength="255" id="message" class="form-control" style="height: 120px" cols="20" placeholder="Mensaje">{{old('mensaje')}}</textarea>
                             <small class="contador"><span id="contador">0</span> <span>/255</span></small>
-                            @error('mensaje')
+                            @error('message')
                               <small class="text-danger">{{$message}}</small>  
                             @enderror
                          </div>
