@@ -21,6 +21,8 @@
   {{-- partial --}}
     @include('partial.navbar')
         
+
+    {{-- content --}}
     <div class="container">
         @yield('content')
     </div>s
