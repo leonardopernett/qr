@@ -60,11 +60,11 @@ class PeticionController extends Controller
 
           $id_solicitud  =  $request->tipo;
           $id_tipologia  =  $request->tipologia;
-          $comentario    =  $request->message;
+          $comentario    =  $request->mensaje;
           $documento     =  $request->identification;
-          $nombre        =  $request->name;
+          $nombre        =  $request->nombre;
           $correo        =  $request->email;
-          $id_cliente    =  $request->client;
+          $id_cliente    =  $request->cliente;
           $numero_caso   =  'C-' .( $res[0]->total + 1);
           $id_estado_caso     =  1;
           
