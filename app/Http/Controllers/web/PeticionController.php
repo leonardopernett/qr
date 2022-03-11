@@ -35,6 +35,8 @@ class PeticionController extends Controller
      public function store(Request $request){
        $data = str_replace("<script>",'',$request->input('mensaje')); 
        $resp = str_replace("</script>",'',$data); 
+
+    
     
         request()->validate([
            'tipo'          => 'required',
@@ -61,7 +63,7 @@ class PeticionController extends Controller
           $id_solicitud  =  $request->tipo;
           $id_tipologia  =  $request->tipologia;
           $comentario    =  $request->mensaje;
-          $documento     =  $request->identification;
+          $documento     =  $request->identificacion;
           $nombre        =  $request->nombre;
           $correo        =  $request->email;
           $id_cliente    =  $request->cliente;
@@ -100,9 +102,9 @@ class PeticionController extends Controller
                 array_push($valor, $correo->email) ;
             }
           
-             Mail::to($valor)->send(new PeticionMailer($data[0]) );
+           /*   Mail::to($valor)->send(new PeticionMailer($data[0]) );
              
-             Mail::to($request->email)->send(new ClienteMailer($data[0]) );
+             Mail::to($request->email)->send(new ClienteMailer($data[0]) ); */
         
              
             return redirect()->route('quejas')->with('message','Su peticion ha sido enviada');
