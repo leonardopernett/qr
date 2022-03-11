@@ -51,7 +51,7 @@
                 <div class="row">
                     <div class="col-md-6">
             
-                       <form action="{{route('contact')}}" method="POST" enctype="multipart/form-data" id="form">
+                       <form action="../public/contact" method="POST" enctype="multipart/form-data" id="form">
                          @csrf
                            <div class="mb-2">
                                <label for=""> <small class="asterisco">*</small> Tipo de petición: </label>
@@ -180,7 +180,7 @@
                        </form>
                     </div>
                     <div class="col-md-6 d-flex align-items-center justify-content-center mt-3 hidden">
-                        <img src="{{asset('images/send.png')}}" alt="" width="500" class="img-fluid "> 
+                        <img src="../public/images/send.png" alt="" width="500" class="img-fluid "> 
                      
                     </div>
                 </div>

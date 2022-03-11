@@ -9,8 +9,7 @@ Route::get('quejas_reclamos', [PeticionController::class, 'create'] )
        ->name('quejas');
 
 /* contactos quejas y reclamos */
-Route::post('/contact',[ PeticionController::class, 'store' ])
-       ->name('contact');
+Route::post('/contact',[ PeticionController::class, 'store' ])->name('contact');
 
 Route::post('tipologia/all', [ PeticionController::class, 'tipologia'])
       ->name('tipologia');
