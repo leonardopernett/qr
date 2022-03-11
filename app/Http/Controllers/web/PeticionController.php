@@ -119,7 +119,6 @@ class PeticionController extends Controller
      public function insertjarvis(Request $request){
    
       $response = explode(' ', $request->header('Authorization'));
-
       if(Str::startsWith('basic ', $response)){
          if($response[1]=='amVua2lzOkNvbG9tYmlhMzIq'){
            return response()->json([" success" => "updated table" ],200);

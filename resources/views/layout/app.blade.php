@@ -18,7 +18,7 @@
     @yield('styles')
 </head>
 <body>
-
+  {{-- partial --}}
     @include('partial.navbar')
         
     <div class="container">
