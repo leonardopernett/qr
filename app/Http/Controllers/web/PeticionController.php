@@ -62,7 +62,7 @@ class PeticionController extends Controller
 
           $id_solicitud  =  $request->tipo;
           $id_tipologia  =  $request->tipologia;
-          $comentario    =  $request->mensaje;
+          $comentario    =  $resp;
           $documento     =  $request->identificacion;
           $nombre        =  $request->nombre;
           $correo        =  $request->email;
@@ -118,21 +118,44 @@ class PeticionController extends Controller
        return DB::connection('mysql')->select('SELECT * FROM tbl_qr_tipologias WHERE id_areas =?',[$request->input('areas')]);
      }
 
+
+
      public function insertjarvis(Request $request){
-   
-      $response = explode(' ', $request->header('Authorization'));
-      if(Str::startsWith('basic ', $response)){
+
+      $result = [];
+      $jarvis = DB::connection('jarvis')->select('select * from dp_clientes');
+
+      for ($i=0; $i < count($jarvis) ; $i++) { 
+          array_push($result, $jarvis[$i]->cliente);
+       }
+
+       /*  DB::connection('mysql')->delete('truncate table tbl_qr_clientes');
+
+        for ($index=0; $index <= count($result) ; $index++) { 
+          DB::connection('mysql')->insert('insert into tbl_qr_clientes (clientes) values (?)',[ $result[$index] ]); 
+        } */ 
+
+       
+        $response = explode(' ', $request->header('Authorization'));
+        if(Str::startsWith('basic', $response[0])){
+
          if($response[1]=='amVua2lzOkNvbG9tYmlhMzIq'){
-           return response()->json([" success" => "updated table" ],200);
-         }else{
-            return response()->json(["error"=>"Unauthorized"],401);
-         }
-      }else{
-        return response()->json(["error"=>"Unauthorized"],401);
+
+               return  response()->json(['success'=>'table insert success'],200);
+
+          }else{
+            return response()->json(['error'=>'unathorized'],401);
+
+          }
+        } else{
+          return response()->json(['error'=>'unathorized'],401);
+
+        }
+
+        if($response[1]==''){
+          return response()->json(['error'=>'unathorized'],401);
+        }
+          return response()->json(['error'=>'unathorized'],401);
       }
-     
-     }
-
-
 
 }
