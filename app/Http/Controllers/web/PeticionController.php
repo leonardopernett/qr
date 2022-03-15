@@ -135,13 +135,16 @@ class PeticionController extends Controller
           DB::connection('mysql')->insert('insert into tbl_qr_clientes (clientes) values (?)',[ $result[$index] ]); 
         } */ 
 
-       
         $response = explode(' ', $request->header('Authorization'));
-        if(Str::startsWith('basic', $response[0])){
 
-         if($response[1]=='amVua2lzOkNvbG9tYmlhMzIq'){
+        $bearer = strtolower($response[0]);
+        
 
-               return  response()->json(['success'=>'table insert success'],200);
+        if(Str::startsWith('bearer ', $bearer)){
+
+         if($response[1]==env('SECRET_KEY')){
+
+           return  response()->json(['success'=>'table insert success'],200);
 
           }else{
             return response()->json(['error'=>'unathorized'],401);
