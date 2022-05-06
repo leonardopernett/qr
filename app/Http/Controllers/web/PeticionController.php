@@ -13,11 +13,10 @@ use Illuminate\Support\Str;
 class PeticionController extends Controller
 {
      public function create(){
-         header("X-Powered-By:");
-         header("Cache-Control: no-cache,no-store, must-revalidate"); //HTTP 1.1
-         header("Pragma: no-cache"); //HTTP 1.0
-         header("X-Content-Type-Options:nosniff");
-
+        header("X-Powered-By:");
+        header("Cache-Control: no-cache,no-store, must-revalidate"); 
+        header("Pragma: no-cache"); //HTTP 1.0
+        header("X-Content-Type-Options:nosniff");
          $solicitud = DB::connection('mysql')->select('select * from tbl_qr_tipos_de_solicitud');
          $areas = DB::connection('mysql')->select('select * from tbl_qr_areas');
          $clientes  = DB::connection('mysql')->select('select * from tbl_qr_clientes');
@@ -36,6 +35,8 @@ class PeticionController extends Controller
      public function store(Request $request){
        $data = str_replace("<script>",'',$request->input('mensaje')); 
        $resp = str_replace("</script>",'',$data); 
+
+    
     
         request()->validate([
            'tipo'            => 'required',
@@ -52,7 +53,6 @@ class PeticionController extends Controller
            'file2'           => 'mimes:pdf,xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000'
          ]);
    
-     
          $recaptch = $request->input('g-recaptcha-response');
 
          if(isset($recaptch)){ 
@@ -61,11 +61,11 @@ class PeticionController extends Controller
 
           $id_solicitud  =  $request->tipo;
           $id_tipologia  =  $request->tipologia;
-          $comentario    =  $request->message;
-          $documento     =  $request->identification;
-          $nombre        =  $request->name;
+          $comentario    =  $resp;
+          $documento     =  $request->identificacion;
+          $nombre        =  $request->nombre;
           $correo        =  $request->email;
-          $id_cliente    =  $request->client;
+          $id_cliente    =  $request->cliente;
           $numero_caso   =  'C-' .( $res[0]->total + 1);
           $id_estado_caso     =  1;
            dd($request->message);
@@ -101,9 +101,9 @@ class PeticionController extends Controller
                 array_push($valor, $correo->email) ;
             }
           
-             Mail::to($valor)->send(new PeticionMailer($data[0]) );
+           /*   Mail::to($valor)->send(new PeticionMailer($data[0]) );
              
-             Mail::to($request->email)->send(new ClienteMailer($data[0]) );
+             Mail::to($request->email)->send(new ClienteMailer($data[0]) ); */
         
              
             return redirect()->route('quejas')->with('message','Su peticion ha sido enviada');
@@ -117,21 +117,47 @@ class PeticionController extends Controller
        return DB::connection('mysql')->select('SELECT * FROM tbl_qr_tipologias WHERE id_areas =?',[$request->input('areas')]);
      }
 
+
+
      public function insertjarvis(Request $request){
-   
-      $response = explode(' ', $request->header('Authorization'));
-      if(Str::startsWith('basic ', $response)){
-         if($response[1]=='amVua2lzOkNvbG9tYmlhMzIq'){
-           return response()->json([" success" => "updated table" ],200);
-         }else{
-            return response()->json(["error"=>"Unauthorized"],401);
-         }
-      }else{
-        return response()->json(["error"=>"Unauthorized"],401);
+
+      $result = [];
+      $jarvis = DB::connection('jarvis')->select('select * from dp_clientes');
+
+      for ($i=0; $i < count($jarvis) ; $i++) { 
+          array_push($result, $jarvis[$i]->cliente);
+       }
+
+       /*  DB::connection('mysql')->delete('truncate table tbl_qr_clientes');
+
+        for ($index=0; $index <= count($result) ; $index++) { 
+          DB::connection('mysql')->insert('insert into tbl_qr_clientes (clientes) values (?)',[ $result[$index] ]); 
+        } */ 
+
+        $response = explode(' ', $request->header('Authorization'));
+
+        $bearer = strtolower($response[0]);
+        
+
+        if(Str::startsWith('bearer ', $bearer)){
+
+         if($response[1]==env('SECRET_KEY')){
+
+           return  response()->json(['success'=>'table insert success'],200);
+
+          }else{
+            return response()->json(['error'=>'unathorized'],401);
+
+          }
+        } else{
+          return response()->json(['error'=>'unathorized'],401);
+
+        }
+
+        if($response[1]==''){
+          return response()->json(['error'=>'unathorized'],401);
+        }
+          return response()->json(['error'=>'unathorized'],401);
       }
-     
-     }
-
-
 
 }
