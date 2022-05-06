@@ -9,13 +9,14 @@ use App\Mail\PeticionMailer;
 use App\Mail\ClienteMailer;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+
 class PeticionController extends Controller
 {
      public function create(){
-        header("X-Powered-By:");
-        header("Cache-Control: no-cache,no-store, must-revalidate"); //HTTP 1.1
-        header("Pragma: no-cache"); //HTTP 1.0
-        header("X-Content-Type-Options:nosniff");
+         header("X-Powered-By:");
+         header("Cache-Control: no-cache,no-store, must-revalidate"); //HTTP 1.1
+         header("Pragma: no-cache"); //HTTP 1.0
+         header("X-Content-Type-Options:nosniff");
 
          $solicitud = DB::connection('mysql')->select('select * from tbl_qr_tipos_de_solicitud');
          $areas = DB::connection('mysql')->select('select * from tbl_qr_areas');
@@ -37,18 +38,18 @@ class PeticionController extends Controller
        $resp = str_replace("</script>",'',$data); 
     
         request()->validate([
-           'tipo'          => 'required',
-           'areas'         => 'required',
-           'tipologia'     => 'required',
+           'tipo'            => 'required',
+           'areas'           => 'required',
+           'tipologia'       => 'required',
            'nombre'          => ['required', 'max:80', 'regex:/^[a-zA-Z,ñ ]*$/',] ,
-           'identificacion'=> ['required','max:20','regex:/^[0-9,$]*$/',],
-           'email'         => ['required', 'email','regex:/^\S+@\S+\.\S+$/'],
-           'cliente'        => 'required',
-           'message'       => 'required | max:150',
-           'areas'         => 'required',
-           'autorizacion' => 'required',
-           'file'  =>    'mimes:pdf, xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000',
-           'file2' =>    'mimes:pdf,xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000'
+           'identificacion'  => ['required','max:20','regex:/^[0-9,$]*$/',],
+           'email'           => ['required', 'email','regex:/^\S+@\S+\.\S+$/'],
+           'cliente'         => 'required',
+           'message'         => 'required | max:150',
+           'areas'           => 'required',
+           'autorizacion'    => 'required',
+           'file'            => 'mimes:pdf, xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000',
+           'file2'           => 'mimes:pdf,xlsx,xls,doc,docx,png,jpg,jpeg,ppt,rar,zip  | max:20000'
          ]);
    
      
